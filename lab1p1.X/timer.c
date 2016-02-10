@@ -1,3 +1,4 @@
+
 /*
  * File:   timer.c
  * Authors:
@@ -6,8 +7,18 @@
  */
 
 #include <xc.h>
+#include "timer.h"
 
 //Uses timer 2
-void delayUs(unsigned int delay){
-    //TODO: Create a delay using timer 2 for "delay" microseconds.
+
+void initTimer1()
+{
+    TMR1 = 0;
+    PR1 = 49999;//1 second timer
+    T1CONbits.TCKPS = 0;//prescaler 1
+    T1CONbits.TCS = 0;//internal PClck
+    IEC0bits.T1IE = 1;//enable interrupts
+    IFS0bits.T1IF = 0;//initialize flag to 0
+    IPC1bits.T1IP = 7;//default priority level
+    T1CONbits.TON = 0;//Timer is disabled
 }
