@@ -9,6 +9,7 @@
 
 #include <xc.h>
 #include <sys/attribs.h>
+#include "config.h"
 #include "leds.h"
 #include "interrupt.h"
 #include "switch.h"
@@ -18,6 +19,8 @@
 #define RELEASE 0
 #define RUN 12
 #define STOP 14
+#define ON 1
+#define OFF 0
 
 /* Please note that the configuration file has changed from lab 0.
  * the oscillator is now of a different frequency.
@@ -39,13 +42,13 @@ int main(void) {
     initSW2(); //Initialize SW1
 
 
-    while (1) {
+    while(1){
         //TODO: Using a finite-state machine, define the behavior of the LEDs
         //Debounce the switch
         switch (state) {
             
             case RUN_LED:
-                turnOnLED(RUN_LED);
+                turnOnLED(RUN);
                 currLED = RUN;
                 T1CONbits.TON = 0;//Timer is disabled
                 TMR1 = 0;
@@ -53,19 +56,19 @@ int main(void) {
                 break;
                 
             case STOP_LED:
-                turnOnLED(STOP_LED); //CHECK TO SEE IF I AM REUSING VARIABLES IMPROPERLY
+                turnOnLED(STOP); //CHECK TO SEE IF I AM REUSING VARIABLES IMPROPERLY
                 currLED = STOP;
-                T1CONbits.TON = 0;//Timer is disabled
+                T1CONbits.TON = OFF;//Timer is disabled
                 TMR1 = 0; 
                 next = PRESS;
                 break;
                 
             case debounce:
-                T1CONbits.TON = 1;//Timer is enabled              
+                T1CONbits.TON = ON;//Timer is enabled              
                 break;
                 
             case press:
-                T1CONbits.TON = 0;//Timer is disabled
+                T1CONbits.TON = OFF;//Timer is disabled
                 TMR1 = 0;
                 next = RELEASE;
                 break;
